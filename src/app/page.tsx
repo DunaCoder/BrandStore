@@ -2,8 +2,8 @@
 import Carousel from "./components/Carousel";
 import Image from "next/image";
 import Products from "./components/Products"
-import { getProductos } from "../../lib/api";
-import type { Producto } from "../../lib/api";
+import { getProductos } from "../lib/api";
+import type { Producto } from "../lib/api";
 import { useEffect, useState } from 'react';
 
 export default function Home() {

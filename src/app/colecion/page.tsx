@@ -1,46 +1,19 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import Products from '@/app/components/Products';
-import { getProductos } from '../../../lib/api'; // Asegúrate de que la ruta sea correcta
-import type { Producto } from '../../../lib/api';
+// app/colecion/page.tsx
+import { prisma } from "@/lib/prisma";
+import Products from "../components/Products";
 
-const Page = () => {
-  // Mismo código que en la página principal
-  const [products, setProducts] = useState<Producto[]>([]);
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const data = await getProductos();
-        setProducts(data);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Error al cargar productos');
-      } finally {
-        setLoading(false);
-      }
-    };
-    
-    fetchProducts();
-  }, []);
+export default async function ColecionPage() {
+  // Aquí ocurre la magia: pedimos los datos directamente a la DB
+  const productosDesdeDB = await prisma.product.findMany({
+    orderBy: { createdAt: 'desc' } // Opcional: mostrar los más nuevos primero
+  });
 
   return (
-    <div>
-      <div className='my-10 mx-0 text-center text-xl capitalize font-bold '>
-        <h2>Todo lo que quieras en un solo lugar</h2>
-      </div>
+    <main className="min-h-screen bg-gray-50 py-10">
+      <h1 className="text-center text-4xl font-bold mb-10">Nuestra Colección</h1>
       
-      {/* Estados de carga y error idénticos a la página principal */}
-      {loading && <div className="text-center py-4">Cargando productos...</div>}
-      {error && <div className="text-red-500 text-center py-4">{error}</div>}
-      
-      <Products 
-        products={products} 
-        error={error}
-      />
-    </div>
+      {/* Le pasamos los datos al componente que acabamos de ajustar */}
+      <Products products={productosDesdeDB} />
+    </main>
   );
-};
-
-export default Page;
+}

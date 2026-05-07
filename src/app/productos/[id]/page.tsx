@@ -1,8 +1,8 @@
 'use client';
 import Image from 'next/image';
-import { Producto } from '../../../../lib/api';
+import { Producto } from '../../../lib/api';
 import { useEffect, useState } from 'react';
-import { getProductoById } from '../../../../lib/api';
+import { getProductoById } from '../../../lib/api';
 import { useCartContext } from '../../../context/CartContext';
 import Link from 'next/link';
 

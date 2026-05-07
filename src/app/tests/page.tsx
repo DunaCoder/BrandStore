@@ -1,6 +1,6 @@
 'use client';
 import {useState, useEffect} from 'react';
-import { getProductos } from '../../../lib/api'; // Asegúrate de que la ruta sea correcta
+import { getProductos } from '../../lib/api'; // Asegúrate de que la ruta sea correcta
 
 const TestAPI = () => {
   // Ejecutar al cargar el componente
