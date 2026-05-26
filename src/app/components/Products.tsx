@@ -2,6 +2,7 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { AddToCart } from './AddToCard'; // Importamos el nuevo componente de añadir al carrito
 // Ya no importamos Producto de lib/api, usaremos los tipos de Prisma automáticamente
 
 const Products = ({ products = [] }: { products: any[] }) => {
@@ -55,11 +56,7 @@ const Products = ({ products = [] }: { products: any[] }) => {
                 </button>
               </Link>
               
-              {/* Dejamos el botón pero sin la función addToCart por ahora 
-                  para que el componente pueda ser Server Component */}
-              <button className="w-full rounded-lg border border-black px-4 py-2 text-sm font-medium text-black hover:bg-gray-100 transition">
-                Añadir al Carrito
-              </button>
+              <AddToCart product={product} />
             </div>
           </div>
         ))}
