@@ -2,15 +2,30 @@
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { AddToCart } from './AddToCard'; // Importamos el nuevo componente de añadir al carrito
-// Ya no importamos Producto de lib/api, usaremos los tipos de Prisma automáticamente
+import { AddToCart } from '../components/AddToCard'; // Corregido typo del import a AddToCart
 
-const Products = ({ products = [] }: { products: any[] }) => {
+interface ProductsProps {
+  products: any[];
+  categoryFilter?: string; // Propiedad para filtrar por categoría en el futuro
+  limit?: number;          // Propiedad por si solo quieres mostrar unos cuantos (ej: en la Home)
+}
+
+const Products = ({ products = [], categoryFilter, limit }: ProductsProps) => {
   
-  if (products.length === 0) {
+  // 1. Dejamos el filtro listo: Si nos pasan una categoría, filtramos el arreglo
+  let filteredProducts = categoryFilter 
+    ? products.filter(product => product.category?.toLowerCase() === categoryFilter.toLowerCase())
+    : products;
+
+  // 2. Dejamos el límite listo: Si nos piden ver solo "unos cuantos", cortamos el arreglo
+  if (limit) {
+    filteredProducts = filteredProducts.slice(0, limit);
+  }
+
+  if (filteredProducts.length === 0) {
     return (
       <div className="text-gray-500 p-10 text-center w-full">
-        No se encontraron productos en la base de datos.
+        No se encontraron productos {categoryFilter ? `en la categoría "${categoryFilter}"` : ''} en la base de datos.
       </div>
     );
   }
@@ -18,7 +33,7 @@ const Products = ({ products = [] }: { products: any[] }) => {
   return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <div
             key={product.id}
             className="w-full relative overflow-hidden rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl flex flex-col bg-white"
@@ -27,8 +42,8 @@ const Products = ({ products = [] }: { products: any[] }) => {
             <Link href={`/productos/${product.id}`} className="block">
               <div className="relative m-2 h-64 w-full">
                 <Image
-                  src={product.images[0] || '/placeholder.png'} // Usamos tu nuevo campo images
-                  alt={product.name} // Cambiado a .name
+                  src={product.images[0] || '/placeholder.png'}
+                  alt={product.name}
                   fill
                   className="object-contain"
                   quality={85}
